@@ -1,0 +1,57 @@
+name: Void Worm GIF Exporter
+
+# Runs on schedule every morning at 04:00 UTC, which is 06:00 CEST time. Manual trigger is also available.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *"
+
+jobs:
+  panda_image_publisher:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write    # Gives write permission to repository contents
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxkbcommon-dev pkg-config
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Create directories
+        run: mkdir -p mutations gifs images layers prompts
+
+      - name: Run GIF generator in experimental headless mode
+        run: cargo run -- --headless
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "Void Worm Gif Bot"
+          git config --global user.email "noreply@github.com"
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git add images/ prompts/ layers/ gifs/ README.md
+          if git diff --cached --quiet; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          else
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected"
+          fi
+
+      - name: Push Generated Content
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git commit -m "🐉Updated gif, image and prompt for $(date +%Y-%m-%d)🐉" 
+          git push origin main

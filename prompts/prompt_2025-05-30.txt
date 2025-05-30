@@ -1,0 +1,1 @@
+A parallax background with limited palette. Layer 1: distant mountains with smooth curves, repeating seamlessly. Layer 2: rolling hills with simple wave patterns, tile horizontally. Layer 3: sparse trees and bushes, spaced evenly, tile seamlessly. Layer 4: rocky ground with scattered stones and small plants, tile smoothly for infinite scroll.

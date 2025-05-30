@@ -1,0 +1,21 @@
+[package]
+name = "alien_world_parallax_scrolling_gif_exporter"
+version = "0.5.0"
+edition = "2021"
+
+[dependencies]
+minifb = "0.21.0"
+image = "0.24.6"
+gif = "0.13.1"
+rand = "0.8"
+chrono = "0.4.41"
+anyhow = "1.0.98"
+base64 = "0.22.1"
+pyo3 = "0.24.2"
+lazy_static = "1.5.0"
+regex = "1.11.1"
+
+[[bin]]
+name = "alien_world_parallax_scrolling_gif_exporter"
+path = "src/main.rs"
+
