@@ -39,7 +39,7 @@ pub fn start_event_loop(mut state: State, headless: bool) {
                 process_frame(&mut state, &mut encoder, width, height, &mut frame_count);
                 last_update = Instant::now();
             } else {
-                finalize_gif_encoding(frame_count, path.as_str());
+                finalize_gif_encoding(state, frame_count, path.as_str());
                 exit(0);
             }
         }

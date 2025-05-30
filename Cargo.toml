@@ -1,5 +1,5 @@
 [package]
-name = "alien_world_parallax_scrolling_gif_exporter"
+name = "void_worm_parallax_gif_exporter"
 version = "0.5.0"
 edition = "2021"
 
@@ -16,6 +16,6 @@ lazy_static = "1.5.0"
 regex = "1.11.1"
 
 [[bin]]
-name = "alien_world_parallax_scrolling_gif_exporter"
+name = "void_worm_parallax_gif_exporter"
 path = "src/main.rs"
 
