@@ -24,6 +24,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libxkbcommon-dev pkg-config
 
+      - name: Install Python dependencies
+        run: pip3 install openai
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
 
