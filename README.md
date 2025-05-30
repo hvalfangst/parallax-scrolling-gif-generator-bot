@@ -11,4 +11,4 @@ Prompts, images, layers, and GIFs are stored in their respective directories wit
 
 ![image](images/image_current.png)
 
-**Prompt:** A 2025s-style parallax background with limited palette. Layer 1: Distant starry sky with faint nebulae, subtle glow. Layer 2: Distant mountains silhouette, smooth curves, minimal detail. Layer 3: Rolling hills with simple trees, repetitive patterns. Layer 4: Foreground cityscape with blocky buildings, roads, and streetlights.
+**Prompt:** A parallax background with limited palette. Layer 1: distant blue mountains with smooth peaks. Layer 2: rolling green hills with simple curves. Layer 3: brown tree silhouettes with sparse branches. Layer 4: dark green grass with scattered bushes and small rocks.
