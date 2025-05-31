@@ -11,4 +11,4 @@ Prompts, images, layers, and GIFs are stored in their respective directories wit
 
 ![image](images/image_current.png)
 
-**Prompt:** A parallax background with limited palette. Layer 1: distant blue mountains with smooth peaks. Layer 2: rolling green hills with simple curves. Layer 3: brown tree silhouettes with sparse branches. Layer 4: dark green grass with scattered bushes and small rocks.
+**Prompt:** A parallax background with limited palette. Layer 1: Light blue gradient with distant mountain silhouettes. Layer 2: Darker blue hills with simple tree shapes. Layer 3: Brown cliffs with sparse bushes. Layer 4: Green grass with small rocks and single trees.
