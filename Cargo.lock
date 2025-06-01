@@ -624,6 +624,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "parallax_scrolling_gif_generator"
+version = "0.5.0"
+dependencies = [
+ "anyhow",
+ "base64",
+ "chrono",
+ "gif",
+ "image",
+ "lazy_static",
+ "minifb",
+ "pyo3",
+ "rand",
+ "regex",
+]
+
+[[package]]
 name = "peeking_take_while"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1028,22 +1044,6 @@ name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
-
-[[package]]
-name = "void_worm_parallax_gif_exporter"
-version = "0.5.0"
-dependencies = [
- "anyhow",
- "base64",
- "chrono",
- "gif",
- "image",
- "lazy_static",
- "minifb",
- "pyo3",
- "rand",
- "regex",
-]
 
 [[package]]
 name = "wasi"

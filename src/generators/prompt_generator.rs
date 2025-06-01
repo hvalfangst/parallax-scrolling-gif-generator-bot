@@ -2,23 +2,29 @@ use crate::utils::text_processor::TextProcessor;
 use anyhow::Result;
 use pyo3::prelude::*;
 
+/// A struct representing a prompt generator that interacts with the OpenAI API.
 pub struct PromptGenerator {
+    /// The API key used for authenticating requests to the OpenAI API.
     api_key: String,
 }
 
 impl PromptGenerator {
+    /// Creates a new instance of `PromptGenerator`.
     pub fn new(api_key: String) -> Self {
         Self {
             api_key: api_key.to_string(),
         }
     }
 
+    /// Generates a prompt using the OpenAI API.
+    ///
+    /// # Returns
+    /// A `Result` containing the generated prompt as a `String` if successful, or an error otherwise.
     pub fn generate_prompt(&self) -> Result<String> {
         let system_prompt = get_system_prompt();
         let text_prompt = get_text_prompt();
 
         println!("Generating prompt with system: '{}', text: '{}'", system_prompt, text_prompt);
-
 
         Python::with_gil(|py| {
             let openai = PyModule::import(py, "openai")?;
@@ -76,6 +82,10 @@ impl PromptGenerator {
     }
 }
 
+/// Returns the system prompt used for generating OpenAI completions.
+///
+/// # Returns
+/// A `String` containing the system prompt.
 fn get_system_prompt() -> String {
     String::from(
         "You are a background artist. Create concise, clear descriptions for parallax backgrounds with 4 distinct, SEPARATE horizontal layers (256px segments each). \
@@ -85,6 +95,10 @@ fn get_system_prompt() -> String {
     )
 }
 
+/// Returns the text prompt used for generating OpenAI completions.
+///
+/// # Returns
+/// A `String` containing the text prompt.
 fn get_text_prompt() -> String {
     format!(
         "Design a 1024x1024 parallax background in a limited palette style, split into 4 clearly SEPARATE horizontal layers (256px segments each):\n\n\

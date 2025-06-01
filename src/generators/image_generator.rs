@@ -3,17 +3,33 @@ use base64::engine::general_purpose;
 use base64::Engine;
 use pyo3::prelude::*;
 
+/// A struct representing an image generator that interacts with the OpenAI API.
 pub struct ImageGenerator {
+    /// The API key used for authenticating requests to the OpenAI API.
     api_key: String,
 }
 
 impl ImageGenerator {
+    /// Creates a new instance of `ImageGenerator`.
+    ///
+    /// # Arguments
+    /// * `api_key` - A `String` containing the OpenAI API key.
+    ///
+    /// # Returns
+    /// A new `ImageGenerator` instance.
     pub fn new(api_key: String) -> Self {
         Self {
             api_key: api_key.to_string(),
         }
     }
 
+    /// Generates an image based on the provided prompt using the OpenAI API.
+    ///
+    /// # Arguments
+    /// * `prompt` - A `&str` containing the text prompt for image generation.
+    ///
+    /// # Returns
+    /// A `Result` containing the image data as a `Vec<u8>` if successful, or an error otherwise.
     pub fn generate_image(&self, prompt: &str) -> Result<Vec<u8>> {
         Python::with_gil(|py| {
             let openai = PyModule::import(py, "openai")?;

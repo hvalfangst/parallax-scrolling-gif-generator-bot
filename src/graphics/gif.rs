@@ -1,9 +1,21 @@
-use crate::state::structs::State;
 use gif::{Encoder, Frame, Repeat};
 use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 
+/// Initializes a GIF encoder with the specified image file, width, and height.
+///
+/// GIFs are limited to a maximum of 256 colors in their palette. This function
+/// sets up the encoder with an empty color map and ensures the GIF will loop
+/// infinitely.
+///
+/// # Arguments
+/// * `image` - A mutable reference to the file where the GIF will be written.
+/// * `width` - The width of the GIF in pixels.
+/// * `height` - The height of the GIF in pixels.
+///
+/// # Returns
+/// An `Encoder` instance configured for the GIF file.
 pub fn initialize_gif_encoder(image: &mut File, width: u16, height: u16) -> Encoder<&mut File> {
     let color_map = &[];
     let mut encoder = Encoder::new(image, width, height, color_map).unwrap();
@@ -11,18 +23,38 @@ pub fn initialize_gif_encoder(image: &mut File, width: u16, height: u16) -> Enco
     encoder
 }
 
+/// Processes a single frame for the GIF encoder.
+///
+/// When the number of colors in the image exceeds 256, we use Euclidean color
+/// distance to map each pixel to the nearest color in the palette. This is
+/// necessary because GIFs have a hard limit of 256 colors in their palette.
+///
+/// # Arguments
+/// * `scaled_buffer` - A mutable reference to the pixel buffer of the image.
+/// * `encoder` - The GIF encoder instance.
+/// * `width` - The width of the frame in pixels.
+/// * `height` - The height of the frame in pixels.
+/// * `frame_count` - A mutable reference to the current frame count.
+/// * `color_map` - The palette of colors used in the GIF.
+/// * `map` - A mutable hash map for mapping pixel values to palette indices.
 pub fn process_frame(
-    game_state: &mut State,
+    scaled_buffer: &mut Vec<u32>,
     encoder: &mut Encoder<&mut File>,
     width: u16,
     height: u16,
-    frame_count: &mut usize
+    frame_count: &mut usize,
+    color_map: Vec<u8>,
+    mut map: HashMap<u32, u8>,
 ) {
-    let (color_map, mut color_to_index_map) = generate_color_map(&game_state.scaled_buffer);
     *frame_count += 1;
 
+    let palette: Vec<(u8, u8, u8)> = color_map
+        .chunks(3)
+        .map(|chunk| (chunk[0], chunk[1], chunk[2]))
+        .collect();
 
-    let buffer = map_pixels_to_indices(&game_state.scaled_buffer, &mut color_to_index_map);
+    let buffer = map_pixels_to_indices(scaled_buffer, &mut map, &palette);
+
     if buffer.is_empty() {
         println!("Warning: Buffer is empty, skipping frame {}", *frame_count);
         return;
@@ -30,47 +62,91 @@ pub fn process_frame(
     write_frame_to_gif(encoder, width, height, &color_map, &buffer, *frame_count);
 }
 
-fn generate_color_map(buffer: &[u32]) -> (Vec<u8>, HashMap<u32, u8>) {
-    let unique_colors: HashSet<u32> = buffer.iter().cloned().collect();
-    let mut color_map = Vec::new();
-    let mut color_to_index_map = HashMap::new();
-
-    // Limit the number of colors to 256
-    let limited_colors: Vec<u32> = unique_colors.into_iter().take(256).collect();
-
-    for (index, &color) in limited_colors.iter().enumerate() {
-        let red = ((color >> 16) & 0xFF) as u8;
-        let green = ((color >> 8) & 0xFF) as u8;
-        let blue = (color & 0xFF) as u8;
-
-        color_map.push(red);
-        color_map.push(green);
-        color_map.push(blue);
-
-        color_to_index_map.insert(color, index as u8);
-    }
-
-    (color_map, color_to_index_map)
-}
-
-fn map_pixels_to_indices(buffer: &[u32], color_to_index_map: &mut HashMap<u32, u8>) -> Vec<u8> {
+/// Maps pixel values to their nearest palette indices using Euclidean color distance.
+///
+/// GIFs are limited to 256 colors, so when an image exceeds this limit, we need
+/// to approximate each pixel's color by finding the closest match in the palette.
+/// Euclidean color distance is used to measure the similarity between colors.
+///
+/// # Arguments
+/// * `buffer` - A slice of pixel values.
+/// * `color_to_index_map` - A mutable hash map for caching pixel-to-index mappings.
+/// * `palette` - A slice of RGB tuples representing the palette.
+///
+/// # Returns
+/// A vector of indices corresponding to the palette colors.
+fn map_pixels_to_indices(buffer: &[u32], color_to_index_map: &mut HashMap<u32, u8>, palette: &[(u8, u8, u8)]) -> Vec<u8> {
     let mut logged_pixels = HashSet::new();
     let mut next_index = color_to_index_map.len() as u8;
+
     let mut color_to_index = |pixel: u32| {
         logged_pixels.insert(pixel);
-        *color_to_index_map.entry(pixel).or_insert_with(|| {
+
+        let index = *color_to_index_map.entry(pixel).or_insert_with(|| {
             if next_index == u8::MAX {
-                return next_index; // Return the maximum index without incrementing
+                return u8::MAX; // Return a placeholder index for skipped colors
             }
-            let index = next_index;
-            next_index += 1;
-            index
-        })
+
+            let pixel_rgb = (
+                ((pixel >> 16) & 0xFF) as u8,
+                ((pixel >> 8) & 0xFF) as u8,
+                (pixel & 0xFF) as u8,
+            );
+
+            let closest_color_index = palette
+                .iter()
+                .enumerate()
+                .min_by(|(_, &color_a), (_, &color_b)| {
+                    let dist_a = color_distance(pixel_rgb, color_a);
+                    let dist_b = color_distance(pixel_rgb, color_b);
+                    dist_a.partial_cmp(&dist_b).unwrap_or(std::cmp::Ordering::Equal)
+                })
+                .map(|(index, _)| index as u8)
+                .unwrap_or(u8::MAX);
+
+            closest_color_index
+        });
+
+        index
     };
 
     buffer.iter().map(|&pixel| color_to_index(pixel)).collect()
 }
 
+/// Calculates the Euclidean distance between two colors.
+///
+/// This function is used to determine the similarity between two RGB colors.
+/// The smaller the distance, the more similar the colors are.
+///
+/// # Arguments
+/// * `color1` - The first color as an RGB tuple.
+/// * `color2` - The second color as an RGB tuple.
+///
+/// # Returns
+/// The Euclidean distance between the two colors.
+fn color_distance(color1: (u8, u8, u8), color2: (u8, u8, u8)) -> f64 {
+    let (r1, g1, b1) = color1;
+    let (r2, g2, b2) = color2;
+
+    let dr = ((r1 as i32 - r2 as i32).pow(2)) as i32;
+    let dg = ((g1 as i32 - g2 as i32).pow(2)) as i32;
+    let db = ((b1 as i32 - b2 as i32).pow(2)) as i32;
+
+    ((dr + dg + db) as f64).sqrt()
+}
+
+/// Writes a single frame to the GIF file.
+///
+/// This function takes the pixel buffer and palette, and writes the frame to
+/// the GIF encoder. The frame is configured with a delay to control playback speed.
+///
+/// # Arguments
+/// * `encoder` - The GIF encoder instance.
+/// * `width` - The width of the frame in pixels.
+/// * `height` - The height of the frame in pixels.
+/// * `color_map` - The palette of colors used in the GIF.
+/// * `buffer` - The pixel buffer containing palette indices.
+/// * `frame_count` - The current frame count.
 fn write_frame_to_gif(
     encoder: &mut Encoder<&mut File>,
     width: u16,

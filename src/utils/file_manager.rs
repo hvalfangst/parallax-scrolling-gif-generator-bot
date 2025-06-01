@@ -2,6 +2,7 @@ use chrono::NaiveDate;
 use std::fs::{self, File};
 use std::io::{self, Read, Write};
 use std::path::PathBuf;
+use crate::state::constants::file_paths::{CURRENT_PROMPT_PATH, INPUT_IMAGE_PATH};
 
 /// FileManager - Handles file operations for images, prompts, and README updates.
 pub struct FileManager;
@@ -46,10 +47,9 @@ impl FileManager {
         println!("Image '{}' saved successfully.", timestamped_path);
 
         // Save current version
-        let current_path = "images/image_current.png";
-        let mut file = File::create(&current_path)?;
+        let mut file = File::create(&INPUT_IMAGE_PATH)?;
         file.write_all(image_bytes)?;
-        println!("Image '{}' saved successfully.", current_path);
+        println!("Image '{}' saved successfully.", INPUT_IMAGE_PATH);
 
         Ok(())
     }
@@ -69,10 +69,9 @@ impl FileManager {
         println!("Prompt '{}' saved successfully.", timestamped_path);
 
         // Save current version
-        let current_path = "prompts/prompt_current.txt";
-        let mut file = File::create(&current_path)?;
+        let mut file = File::create(&CURRENT_PROMPT_PATH)?;
         file.write_all(prompt.as_bytes())?;
-        println!("Prompt '{}' saved successfully.", current_path);
+        println!("Prompt '{}' saved successfully.", CURRENT_PROMPT_PATH);
 
         Ok(())
     }
