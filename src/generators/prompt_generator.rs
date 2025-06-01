@@ -88,10 +88,12 @@ impl PromptGenerator {
 /// A `String` containing the system prompt.
 fn get_system_prompt() -> String {
     String::from(
-        "You are a background artist. Create concise, clear descriptions for parallax backgrounds with 4 distinct, SEPARATE horizontal layers (256px segments each). \
-        Each layer must be clearly distinguishable for use in parallax scrolling. Use a LIMITED COLOR PALETTE. \
-        All patterns MUST tile seamlessly horizontally for infinite scrolling in GIFs. Prioritize seamless looping and clarity over fine detail. \
-        Keep responses under 100 tokens."
+        "You are a technical background artist specializing in parallax layer generation. \
+        You MUST create backgrounds as 4 DISTINCT horizontal strips stacked vertically. \
+        Each strip is EXACTLY 256px tall and represents ONE parallax layer that will be extracted separately. \
+        Use CONTRASTING colors/tones between layers for easy separation. \
+        ALL elements must tile perfectly horizontally. NO vertical blending between layers. \
+        Each layer must be visually independent."
     )
 }
 
@@ -101,13 +103,18 @@ fn get_system_prompt() -> String {
 /// A `String` containing the text prompt.
 fn get_text_prompt() -> String {
     format!(
-        "Design a 1024x1024 parallax background in a limited palette style, split into 4 clearly SEPARATE horizontal layers (256px segments each):\n\n\
-        Layer 1 (256px): [describe far background elements - MUST tile seamlessly]\n\
-        Layer 2 (512px): [describe mid-distant elements - MUST tile seamlessly]\n\
-        Layer 3 (768px): [describe near background elements - MUST tile seamlessly]\n\
-        Layer 4 (1024px): [describe foreground elements - MUST tile seamlessly]\n\n\
-        IMPORTANT: Use a limited palette across ALL layers. Each layer must be easy to separate for parallax. \
-        The pattern MUST repeat seamlessly for horizontal scrolling in a GIF.\n\n\
-        Format: \"A parallax background with limited palette. Layer 1: [simple tiling elements]. Layer 2: [simple tiling elements]. Layer 3: [simple tiling elements]. Layer 4: [simple tiling elements].\" Keep under 100 tokens.",
+        "Create a 1024x1024 image structured as 4 horizontal strips stacked vertically. \
+        Each strip is EXACTLY 256px tall and contains ONE parallax layer:\n\n\
+        TOP STRIP (0-256px): Far background layer - [simple, light-toned repeating elements]\n\
+        SECOND STRIP (256-512px): Mid-background layer - [medium-toned repeating elements]\n\
+        THIRD STRIP (512-768px): Near-background layer - [darker-toned repeating elements]\n\
+        BOTTOM STRIP (768-1024px): Foreground layer - [darkest/most contrasted repeating elements]\n\n\
+        CRITICAL REQUIREMENTS:\n\
+        - Each 256px strip must be visually DISTINCT from others\n\
+        - Use different color tones for each strip for easy extraction\n\
+        - NO gradients or blending between strips\n\
+        - Elements within each strip must tile seamlessly horizontally\n\
+        - Sharp horizontal divisions between each 256px section\n\n\
+        Describe as: 'Four distinct horizontal parallax strips, each 256px tall with seamlessly tiling elements.'"
     )
 }

@@ -36,7 +36,7 @@ jobs:
       - name: Run tests
         run: cargo test --all-features
 
-      - name: Run GIF generator in experimental headless mode
+      - name: Run GIF generator in headless mode
         run: cargo run -- --headless
 
       - name: Configure Git
