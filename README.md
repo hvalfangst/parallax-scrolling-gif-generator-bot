@@ -19,8 +19,9 @@ Additionally, the GIF generation pipeline may produce totally botched results wh
 
 ![image](images/image_current.png)
 
-**Prompt:** Four distinct horizontal parallax strips, each 256px tall with seamlessly tiling elements:
+**Prompt:** Certainly! Here's a detailed conceptual description for your 2D RPG cave-themed parallax background, divided into four horizontal 256px strips, each with distinct natural elements and color zones, all seamlessly tiling horizontally:
 
-**Top Strip (0-256px):**  
-- Color tone: Light pastel beige (#FDF5E6)  
-- Elements: Small, simple geometric shapes like circles and squares in soft pastel shades (light blue, pink, mint). These shapes are evenly spaced and tile seamlessly horizontally, creating a subtle, airy background suitable for distant scenery. No complex details, just minimalistic repeating patterns.
+---
+
+### **Overall Theme & Atmosphere**
+- **Setting:** Cave interior on an overcast day, with diffused, soft lighting.
