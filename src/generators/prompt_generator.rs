@@ -221,38 +221,24 @@ fn generate_rpg_parallax_prompt(theme: BackgroundTheme) -> String {
 
     // Add some variation
     let lighting = match rng.gen_range(0..4) {
-        0 => "dawn lighting with soft golden glow",
-        1 => "midday bright natural lighting",
-        2 => "dusk lighting with warm orange tones",
-        _ => "overcast lighting with soft shadows",
+        0 => "dawn lighting",
+        1 => "bright midday",
+        2 => "golden hour",
+        _ => "overcast day",
     };
 
     format!(
-        "Create a 1024x1024 2D RPG parallax background with four distinct horizontal strips, each 256px tall. \
-        Theme: {:?} landscape with {}.\n\n\
-        **Top Strip (0-256px):** Distant background layer\n\
-        - Color tone: {}\n\
-        - Elements: {} that tile seamlessly horizontally\n\
-        - Style: Soft, atmospheric, low detail for maximum distance\n\n\
-        **Second Strip (256-512px):** Mid-background layer\n\
-        - Color tone: {}\n\
-        - Elements: {} with moderate detail\n\
-        - Style: More defined than distance layer but still atmospheric\n\n\
-        **Third Strip (512-768px):** Near-background layer\n\
-        - Color tone: {}\n\
-        - Elements: {} with good detail and texture\n\
-        - Style: Clearly defined features, medium contrast\n\n\
-        **Bottom Strip (768-1024px):** Foreground layer\n\
-        - Color tone: {}\n\
-        - Elements: {} with high detail and contrast\n\
-        - Style: Sharp, detailed, highest contrast for immediate foreground\n\n\
-        **Critical Requirements:**\n\
-        - Each strip must have distinctly different color tones for easy layer extraction\n\
-        - NO gradients or blending between the four 256px strips\n\
-        - Sharp horizontal divisions between each layer\n\
-        - All elements within each strip tile perfectly horizontally\n\
-        - Natural, organic RPG game aesthetic - avoid geometric or abstract shapes",
-        theme, lighting, color0, elements0, color1, elements1, color2, elements2, color3, elements3
+        "1024x1024 pixel art 2D RPG parallax background, {:?} theme, {}, four horizontal 256px strips stacked vertically:\n\
+        Top strip (0-256px): {} background, {}, {}\n\
+        Second strip (256-512px): {} mid-ground, {}, {}\n\
+        Third strip (512-768px): {} near layer, {}, {}\n\
+        Bottom strip (768-1024px): {} foreground, {}, {}\n\
+        Seamlessly tiling horizontally, sharp divisions between strips, no gradients between layers, distinct color zones",
+        theme, lighting,
+        color0, desc0, elements0,
+        color1, desc1, elements1,
+        color2, desc2, elements2,
+        color3, desc3, elements3
     )
 }
 
@@ -271,4 +257,69 @@ pub fn generate_random_rpg_prompt() -> String {
 
     let chosen_theme = themes[rng.gen_range(0..themes.len())].clone();
     generate_rpg_parallax_prompt(chosen_theme)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_prompt_generator_new() {
+        let api_key = "test_key".to_string();
+        let generator = PromptGenerator::new(api_key.clone());
+        assert_eq!(generator.api_key, api_key);
+    }
+
+    #[test]
+    fn test_background_theme_layer_elements() {
+        // Test Forest theme
+        let forest = BackgroundTheme::Forest;
+        let (color, desc, elements) = forest.get_layer_elements(0);
+        assert_eq!(color, "Pale sky blue (#E6F3FF)");
+        assert!(!desc.is_empty());
+        assert!(!elements.is_empty());
+
+        // Test Mountain theme
+        let mountain = BackgroundTheme::Mountain;
+        let (color, desc, elements) = mountain.get_layer_elements(1);
+        assert_eq!(color, "Cool gray-blue (#B0C4DE)");
+        assert!(!desc.is_empty());
+        assert!(!elements.is_empty());
+
+        // Test default fallback
+        let desert = BackgroundTheme::Desert;
+        let (color, desc, elements) = desert.get_layer_elements(0);
+        assert_eq!(color, "Light neutral (#F5F5F5)");
+        assert_eq!(desc, "Generic background elements");
+        assert_eq!(elements, "simple repeating natural elements");
+    }
+
+    #[test]
+    fn test_system_prompt() {
+        let prompt = get_system_prompt();
+        assert!(!prompt.is_empty());
+        assert!(prompt.contains("2D RPG parallax background"));
+    }
+
+    #[test]
+    fn test_generate_rpg_parallax_prompt() {
+        let theme = BackgroundTheme::Forest;
+        let prompt = generate_rpg_parallax_prompt(theme);
+
+        assert!(prompt.contains("1024x1024 pixel art"));
+        assert!(prompt.contains("Forest theme"));
+        assert!(prompt.contains("Top strip (0-256px)"));
+        assert!(prompt.contains("Second strip (256-512px)"));
+        assert!(prompt.contains("Third strip (512-768px)"));
+        assert!(prompt.contains("Bottom strip (768-1024px)"));
+    }
+
+    #[test]
+    fn test_generate_random_rpg_prompt() {
+        let prompt = generate_random_rpg_prompt();
+        assert!(!prompt.is_empty());
+        assert!(prompt.contains("1024x1024 pixel art"));
+        assert!(prompt.contains("theme"));
+        assert!(prompt.contains("strip"));
+    }
 }
