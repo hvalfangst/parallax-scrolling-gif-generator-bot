@@ -15,4 +15,8 @@ This entire flow is automated via a [GitHub Actions workflow](.github/workflows/
 
 ![image](images/image_current.png)
 
-**Prompt:** A parallax background with limited palette. Layer 1: distant blue mountains with smooth peaks. Layer 2: mid-range green hills with gentle curves. Layer 3: near brown rocky formations with simple shapes. Layer 4: foreground tan dirt ground with scattered rocks and grass patches.
+**Prompt:** Four distinct horizontal parallax strips, each 256px tall with seamlessly tiling elements:
+
+**Top Strip (0-256px):**  
+- Color tone: Light pastel beige (#FDF5E6)  
+- Elements: Small, simple geometric shapes like circles and squares in soft pastel shades (light blue, pink, mint). These shapes are evenly spaced and tile seamlessly horizontally, creating a subtle, airy background suitable for distant scenery. No complex details, just minimalistic repeating patterns.
