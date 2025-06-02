@@ -8,6 +8,8 @@ These layers simulate parallax scrolling, recorded as a GIF.
 Prompts, images, layers, and GIFs are stored in their respective directories with timestamped filenames. 
 This entire flow is automated via a [GitHub Actions workflow](.github/workflows/gif_publisher.yml) **CRON** that executes daily at 04:00 UTC (06:00 CET).
 
+IMPORTANT: One is completely at the mercy of DALL-E's API, which may not always produce the desired results - and thus may not always render a nice parallax effect or even a valid GIF.
+
 ## Today's GIF
 ![gif](gifs/gif_current.gif)
 
