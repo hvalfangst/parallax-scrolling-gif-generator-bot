@@ -92,8 +92,7 @@ pub enum BackgroundTheme {
     Ocean,
     City,
     Village,
-    Cave,
-    Sky,
+    Cave
 }
 
 /// Generates nature/cityscape appropriate elements for each parallax layer
@@ -298,7 +297,7 @@ mod tests {
     fn test_system_prompt() {
         let prompt = get_system_prompt();
         assert!(!prompt.is_empty());
-        assert!(prompt.contains("2D RPG parallax background"));
+        assert!(prompt.contains("You are an expert 2D RPG background artist"));
     }
 
     #[test]

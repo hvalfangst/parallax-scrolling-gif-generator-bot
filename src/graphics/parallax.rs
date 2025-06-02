@@ -38,9 +38,9 @@ pub fn create_parallax_layers(input_path: &str, current_date: NaiveDate) -> Resu
     // Define the layer heights (each layer is 256 pixels tall)
     let layer_heights = [256, 512, 768, 1024];
 
-    for (i, &layer_height) in layer_heights.iter().enumerate() {
+    for (i, _) in layer_heights.iter().enumerate() {
         // Create a new image buffer for the layer
-        let mut layer = ImageBuffer::from_fn(width, height, |x, y| {
+        let layer = ImageBuffer::from_fn(width, height, |x, y| {
             // Include pixels within the current layer's height range
             if y >= (i * 256) as u32 && y < ((i + 1) * 256) as u32 {
                 img.get_pixel(x, y)

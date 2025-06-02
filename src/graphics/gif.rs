@@ -77,7 +77,7 @@ pub fn process_frame(
 /// A vector of indices corresponding to the palette colors.
 fn map_pixels_to_indices(buffer: &[u32], color_to_index_map: &mut HashMap<u32, u8>, palette: &[(u8, u8, u8)]) -> Vec<u8> {
     let mut logged_pixels = HashSet::new();
-    let mut next_index = color_to_index_map.len() as u8;
+    let next_index = color_to_index_map.len() as u8;
 
     let mut color_to_index = |pixel: u32| {
         logged_pixels.insert(pixel);

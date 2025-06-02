@@ -1,25 +1,12 @@
+use crate::state::constants::file_paths::{CURRENT_PROMPT_PATH, INPUT_IMAGE_PATH};
 use chrono::NaiveDate;
 use std::fs::{self, File};
-use std::io::{self, Read, Write};
-use std::path::PathBuf;
-use crate::state::constants::file_paths::{CURRENT_PROMPT_PATH, INPUT_IMAGE_PATH};
+use std::io::{self, Write};
 
 /// FileManager - Handles file operations for images, prompts, and README updates.
 pub struct FileManager;
 
 impl FileManager {
-    /// Get the project root directory.
-    ///
-    /// Returns:
-    ///     PathBuf to project root directory
-    fn get_project_root() -> PathBuf {
-        let current_exe = std::env::current_exe().expect("Failed to get executable path");
-        current_exe.parent().unwrap()
-            .parent().unwrap()
-            .parent().unwrap()
-            .parent().unwrap()
-            .to_path_buf()
-    }
 
     /// Create directory if it doesn't exist.
     ///
