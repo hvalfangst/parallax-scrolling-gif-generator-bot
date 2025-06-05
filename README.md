@@ -19,4 +19,4 @@ Additionally, the GIF generation pipeline may produce totally botched results wh
 
 ![image](images/image_current.png)
 
-**Prompt:** Background for 2d side-scrolling game, which have 4 separate horizontal layers for parallax scrolling. Layer 1: Distant mountain silhouettes with gentle curves, repeating seamlessly. Layer 2: Rolling hills with sparse trees, smoothly tiled. Layer 3: Closer foliage and small rocks, with varied but seamless patterns. Layer 4: Pathway and foreground grass with simple, tileable textures for player interaction.
+**Prompt:** Background for 2d side-scrolling game, which have 4 separate horizontal layers for parallax scrolling. Layer 1: distant sky with subtle clouds and gradient, tile seamlessly. Layer 2: rolling hills with gentle curves and sparse trees, tile seamlessly. Layer 3: closer trees and bushes with varied shapes, tile seamlessly. Layer 4: detailed ground with rocks, grass patches, and small plants, tile seamlessly.
