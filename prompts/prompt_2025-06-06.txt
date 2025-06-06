@@ -1,0 +1,1 @@
+Background for 2d side-scrolling game, which have 4 separate horizontal layers for parallax scrolling. Layer 1: distant mountain silhouettes with soft peaks, seamless at edges. Layer 2: rolling hills with gentle curves, repeating smoothly. Layer 3: sparse trees and bushes, evenly spaced for depth. Layer 4: detailed grass and small rocks, creating foreground texture.
