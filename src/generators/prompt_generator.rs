@@ -86,22 +86,19 @@ impl PromptGenerator {
 fn get_system_prompt() -> String {
     String::from(
         "You are a specialized 2D background artist for side-scrolling adventure games. \
-        Focus on creating atmospheric, pixel-perfect backgrounds with 4 distinct parallax layers (256px each). \
-        Design each layer for seamless horizontal tiling with clear depth separation. \
-        Emphasize visual hierarchy through limited color palettes (4-8 colors per scene). \
-        Create backgrounds that support the game's movement flow and maintain readability during scrolling. \
-        Prioritize designs that complement player navigation while avoiding visual noise that could distract from gameplay. \
-        All elements must tile perfectly for infinite horizontal scrolling. Keep descriptions under 100 tokens."
+        Focus on creating atmospheric, backgrounds with 4 distinct horizontal layers. \
+        The generated background is used as input to an algorithm that divides it into 4 layers, which \
+        is why the 4 distinct 256 pixel horizontal layer requirement is important\
+        Keep descriptions under 100 tokens."
     )
 }
 /// Generates a themed RPG parallax background prompt
 fn generate_text_prompt() -> String {
-    "Design a 1024x1024 parallax background for a 2d side-scrolling game, which consists of 4 layers (256px segments each):\n\n\
-        Layer 1 (256px): [describe far background elements - MUST tile seamlessly]\n\
-        Layer 2 (512px): [describe mid-distant elements - MUST tile seamlessly]\n\
-        Layer 3 (768px): [describe near background elements - MUST tile seamlessly]\n\
-        Layer 4 (1024px): [describe foreground elements - MUST tile seamlessly]\n\n\
-        IMPORTANT: Each layer must be easy to separate for parallax. \
+    "Design a 1024x1024 parallax background for a 2d side-scrolling game, which consists of 4 horizontal layers (256px segments each):\n\n\
+        Layer 1 (256px): [describe far background elements]\n\
+        Layer 2 (512px): [describe mid-distant elements]\n\
+        Layer 3 (768px): [describe near background elements]\n\
+        Layer 4 (1024px): [describe foreground elements]\n\n\
         The pattern MUST repeat seamlessly for horizontal scrolling in a GIF.\n\n\
-        Format: \"Background for 2d side-scrolling game, which have 4 separate horizontal layers for parallax scrolling. Layer 1: [simple tiling elements]. Layer 2: [simple tiling elements]. Layer 3: [simple tiling elements]. Layer 4: [simple tiling elements].\" Keep under 100 tokens.".to_string()
+        Format: \"Background for 2d side-scrolling game, which have 4 separate horizontal layers. Layer 1: []. Layer 2: []. Layer 3: []. Layer 4: [].\" Keep under 100 tokens.".to_string()
 }
