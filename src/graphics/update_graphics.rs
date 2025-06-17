@@ -12,14 +12,14 @@ use crate::state::structs::State;
 ///
 /// # Parameters
 /// - `game_state`: A mutable reference to the current game state, containing camera position, window buffer, and sprite layers.
-pub fn update_pixel_buffer(game_state: &mut State) {
+pub fn update_pixel_buffer(state: &mut State) {
 
     // Always draw the static background layer first in order to fill all pixels as the parallax effect can result in empty pixels
-    draw_sprite(0, 0, &game_state.sprites.layer_1[0], game_state.window_buffer, game_state.art_width);
+    draw_sprite(0, 0, &state.sprites.layer_1[0], state.window_buffer, state.window_width);
 
     // Draw each parallax layer
-    draw_parallax_layer(game_state, 0, 16);
-    draw_parallax_layer(game_state, 1, 6);
-    draw_parallax_layer(game_state, 2, 4);
-    draw_parallax_layer(game_state, 3, 1);
+    draw_parallax_layer(state, 0, 16);
+    draw_parallax_layer(state, 1, 6);
+    draw_parallax_layer(state, 2, 4);
+    draw_parallax_layer(state, 3, 1);
 }

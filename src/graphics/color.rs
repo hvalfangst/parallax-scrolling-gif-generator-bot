@@ -387,8 +387,10 @@ pub fn extract_palette(input_image_path: &str) -> Result<(Vec<u8>, HashMap<u32, 
     let color_map: Vec<u8> = palette.iter().flat_map(|color| vec![color.r, color.g, color.b]).collect();
     let color_to_index_map: HashMap<u32, u8> = palette.iter().enumerate().map(|(i, color)| {
         let packed_color = ((color.r as u32) << 16) | ((color.g as u32) << 8) | (color.b as u32);
+        println!("Mapping color {} (RGB: {}, {}, {}) to index {}", packed_color, color.r, color.g, color.b, i);
         (packed_color, i as u8)
     }).collect();
+
 
     Ok((color_map, color_to_index_map))
 }

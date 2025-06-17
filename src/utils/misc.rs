@@ -1,9 +1,12 @@
+use std::collections::HashMap;
 use std::env;
 use std::error::Error;
+use std::process::exit;
 use std::time::Instant;
 use chrono::NaiveDate;
 use minifb::Key;
 use crate::{generators, utils};
+use crate::graphics::color::extract_palette;
 use crate::graphics::parallax::create_parallax_layers;
 use crate::state::constants::file_paths::CURRENT_GIF_PATH;
 use crate::state::constants::graphics::CAMERA_X_INCREMENT;
@@ -152,5 +155,27 @@ pub fn finalize_gif_encoding(state: State, frame_count: usize, path: &str) {
     match utils::file_manager::FileManager::update_readme(state.prompt) {
         Ok(_) => println!("README updated successfully."),
         Err(e) => eprintln!("Failed to update README: {}", e),
+    }
+}
+
+/// Extracts the color palette from an image or exits the program on failure.
+///
+/// This function attempts to extract the color palette from the specified image file.
+/// If the extraction fails, an error message is printed, and the program exits with a status code of 1.
+///
+/// # Arguments
+/// * `image_path` - The file path to the image from which the palette will be extracted.
+///
+/// # Returns
+/// A tuple containing:
+/// - A vector of palette colors.
+/// - A hash map mapping pixel values to palette indices.
+pub fn extract_palette_or_exit(image_path: &str) -> (Vec<u8>, HashMap<u32, u8>) {
+    match extract_palette(image_path) {
+        Ok(result) => result,
+        Err(e) => {
+            eprintln!("Failed to extract palette: {}", e);
+            exit(1);
+        }
     }
 }

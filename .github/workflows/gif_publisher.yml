@@ -36,8 +36,20 @@ jobs:
       - name: Run tests
         run: cargo test --all-features
 
-      - name: Run GIF generator in headless mode
-        run: cargo run -- --headless
+      - name: Run GIF generator in headless mode with 2 retries on failure
+        run: |
+          for i in {1..3}; do
+            if cargo run -- --headless; then
+              echo "GIF generation successful"
+              break
+            else
+              echo "GIF generation failed. Retrying... ($i/3)"
+            fi
+            if [ $i -eq 3 ]; then
+              echo "GIF generation failed after 3 attempts."
+              exit 1
+            fi
+          done
 
       - name: Configure Git
         run: |

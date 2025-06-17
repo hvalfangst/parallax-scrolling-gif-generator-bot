@@ -21,12 +21,12 @@ pub struct SpriteMaps {
 }
 
 impl SpriteMaps {
-    pub fn new(current_date: NaiveDate) -> Self {
+    pub fn new(target_date: NaiveDate) -> Self {
         Self {
-            layer_1: load_sprites_from_map(format!("layers/1/layer_{}.png", current_date).as_str(), 1024, 1024),
-            layer_2: load_sprites_from_map(format!("layers/2/layer_{}.png", current_date).as_str(), 1024, 1024),
-            layer_3: load_sprites_from_map(format!("layers/3/layer_{}.png", current_date).as_str(), 1024, 1024),
-            layer_4: load_sprites_from_map(format!("layers/4/layer_{}.png", current_date).as_str(), 1024, 1024),
+            layer_1: load_sprites_from_map(format!("layers/1/layer_{}.png", target_date).as_str(), 1024, 1024),
+            layer_2: load_sprites_from_map(format!("layers/2/layer_{}.png", target_date).as_str(), 1024, 1024),
+            layer_3: load_sprites_from_map(format!("layers/3/layer_{}.png", target_date).as_str(), 1024, 1024),
+            layer_4: load_sprites_from_map(format!("layers/4/layer_{}.png", target_date).as_str(), 1024, 1024),
         }
     }
 }

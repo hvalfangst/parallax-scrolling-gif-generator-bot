@@ -83,25 +83,25 @@ pub fn create_parallax_layers(input_path: &str, current_date: NaiveDate) -> Resu
 /// - The `offset_y` is calculated using the camera's vertical position divided by a fixed value.
 /// - The appropriate layer is selected based on the `layer_index`.
 /// - The `draw_sprite` function is used to render the layer onto the window buffer.
-pub fn draw_parallax_layer(game_state: &mut State, layer_index: usize, divisor: usize) {
-    let texture_width = game_state.art_width;
+pub fn draw_parallax_layer(state: &mut State, layer_index: usize, divisor: usize) {
+    let texture_width = state.window_width;
 
-    let offset_x = game_state.camera.x as usize / divisor % texture_width;
-    let offset_y = game_state.camera.y as usize / 666;
+    let offset_x = state.camera.x as usize / divisor % texture_width;
+    let offset_y = state.camera.y as usize / 666;
 
     let layer = match layer_index {
-        0 => &game_state.sprites.layer_1[0],
-        1 => &game_state.sprites.layer_2[0],
-        2 => &game_state.sprites.layer_3[0],
-        3 => &game_state.sprites.layer_4[0],
+        0 => &state.sprites.layer_1[0],
+        1 => &state.sprites.layer_2[0],
+        2 => &state.sprites.layer_3[0],
+        3 => &state.sprites.layer_4[0],
         _ => unreachable!(),
     };
 
     draw_sprite(
-        (game_state.window_width).saturating_sub(offset_x),
+        (state.window_width).saturating_sub(offset_x),
         offset_y,
         layer,
-        game_state.window_buffer,
-        game_state.art_width,
+        state.window_buffer,
+        state.window_width,
     );
 }

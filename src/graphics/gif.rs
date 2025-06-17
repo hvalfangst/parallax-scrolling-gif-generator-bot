@@ -2,6 +2,8 @@ use gif::{Encoder, Frame, Repeat};
 use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
+use std::process::exit;
+use crate::state::constants::graphics::{WINDOW_HEIGHT, WINDOW_WIDTH};
 
 /// Initializes a GIF encoder with the specified image file, width, and height.
 ///
@@ -38,28 +40,31 @@ pub fn initialize_gif_encoder(image: &mut File, width: u16, height: u16) -> Enco
 /// * `color_map` - The palette of colors used in the GIF.
 /// * `map` - A mutable hash map for mapping pixel values to palette indices.
 pub fn process_frame(
-    scaled_buffer: &mut Vec<u32>,
+    window_buffer: &mut Vec<u32>,
     encoder: &mut Encoder<&mut File>,
-    width: u16,
-    height: u16,
     frame_count: &mut usize,
-    color_map: Vec<u8>,
-    mut map: HashMap<u32, u8>,
+    color_map: &Option<Vec<u8>>,
+    map: &mut Option<HashMap<u32, u8>>,
 ) {
     *frame_count += 1;
 
-    let palette: Vec<(u8, u8, u8)> = color_map
-        .chunks(3)
-        .map(|chunk| (chunk[0], chunk[1], chunk[2]))
-        .collect();
+    let palette: Vec<(u8, u8, u8)> = if let Some(color_map) = color_map {
+        color_map
+            .chunks(3)
+            .map(|chunk| (chunk[0], chunk[1], chunk[2]))
+            .collect()
+    } else {
+        vec![]
+    };
 
-    let buffer = map_pixels_to_indices(scaled_buffer, &mut map, &palette);
 
-    if buffer.is_empty() {
-        println!("Warning: Buffer is empty, skipping frame {}", *frame_count);
-        return;
-    }
-    write_frame_to_gif(encoder, width, height, &color_map, &buffer, *frame_count);
+    let buffer = if let Some(ref mut map) = map {
+        map_pixels_to_indices(window_buffer, map, &palette)
+    } else {
+        vec![]
+    };
+
+    write_frame_to_gif(encoder, WINDOW_WIDTH as u16, WINDOW_HEIGHT as u16, color_map.as_deref().unwrap_or(&[]), &buffer, *frame_count);
 }
 
 /// Maps pixel values to their nearest palette indices using Euclidean color distance.
@@ -84,7 +89,8 @@ fn map_pixels_to_indices(buffer: &[u32], color_to_index_map: &mut HashMap<u32, u
 
         let index = *color_to_index_map.entry(pixel).or_insert_with(|| {
             if next_index == u8::MAX {
-                return u8::MAX; // Return a placeholder index for skipped colors
+                eprintln!("Error: No color index available for pixel {}. Exiting to prevent overflow.", pixel);
+                exit(1); // GitHub Actions will detect this as a failure
             }
 
             let pixel_rgb = (
@@ -102,7 +108,9 @@ fn map_pixels_to_indices(buffer: &[u32], color_to_index_map: &mut HashMap<u32, u
                     dist_a.partial_cmp(&dist_b).unwrap_or(std::cmp::Ordering::Equal)
                 })
                 .map(|(index, _)| index as u8)
-                .unwrap_or(u8::MAX);
+                .unwrap_or(0); // Default to the first color in the palette if no unique closest color is found
+
+            // println!("Mapping pixel {} to color index {}", pixel, closest_color_index);
 
             closest_color_index
         });

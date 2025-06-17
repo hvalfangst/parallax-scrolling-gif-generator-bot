@@ -1,5 +1,8 @@
+use std::collections::HashMap;
+use chrono::NaiveDate;
 use crate::graphics::sprites::SpriteMaps;
 use minifb::Window;
+use crate::state::constants::graphics::{WINDOW_HEIGHT, WINDOW_WIDTH};
 
 /// Represents a camera in the simulation.
 pub struct Camera {
@@ -27,8 +30,8 @@ impl Camera {
 
 /// Represents the state of the application.
 pub struct State<'a> {
-    /// The current date.
-    pub current_date: chrono::NaiveDate,
+    /// The chosen date, either as of date or current.
+    pub target_date: chrono::NaiveDate,
     /// The camera object.
     pub camera: Camera,
     /// The sprite maps used in the application.
@@ -41,12 +44,40 @@ pub struct State<'a> {
     pub window_height: usize,
     /// The optional window object.
     pub window: Option<&'a mut Window>,
-    /// The buffer for the scaled graphics.
-    pub scaled_buffer: &'a mut Vec<u32>,
-    /// The width of the game world.
-    pub art_width: usize,
-    /// The height of the game world.
-    pub art_height: usize,
     /// The prompt for the current state.
     pub prompt: &'a str,
+    /// Whether the application is running in headless mode
+    pub headless: bool,
+    /// Color map for the application
+    pub color_map: Option<Vec<u8>>,
+    /// Map from color to index for palette management
+    pub color_to_index_map: Option<HashMap<u32, u8>>
 }
+
+impl State<'_> {
+    pub fn new<'a>(
+        target_date: NaiveDate,
+        window_buffer: &'a mut Vec<u32>,
+        window: Option<&'a mut Window>,
+        prompt: &'a str,
+        headless: bool,
+        color_map: Option<Vec<u8>>,
+        color_to_index_map: Option<HashMap<u32, u8>>,
+    ) -> State<'a> {
+        State {
+            target_date,
+            camera: Camera::new(0.0, 0.0),
+            sprites: SpriteMaps::new(target_date),
+            window_buffer,
+            window_width: WINDOW_WIDTH,
+            window_height: WINDOW_HEIGHT,
+            window,
+            prompt,
+            headless,
+            color_map,
+            color_to_index_map,
+        }
+    }
+}
+
+
