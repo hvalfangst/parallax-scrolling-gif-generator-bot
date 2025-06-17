@@ -1,1 +1,1 @@
-Background for 2d side-scrolling game, which have 4 separate horizontal layers. Layer 1: Distant mountain silhouettes with soft gradients. Layer 2: Rolling hills with sparse trees. Layer 3: Bushes and small rocks, detailed textures. Layer 4: Grass, flowers, and scattered stones for foreground interaction.
+Background for 2d side-scrolling game, which have 4 separate horizontal layers. Layer 1: [Far background elements, distant mountains and sky with subtle gradients, using shades of 0x001f41, 0x82c6d6, and 0x2f5a78 to create depth].
