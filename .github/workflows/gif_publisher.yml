@@ -49,8 +49,7 @@ jobs:
             ${{ runner.os }}-target-
 
       - name: Compile Rust project
-        if: steps.cache_rust_build_artifacts.outputs.cache-hit != 'true'
-        run: cargo build --release --no-default-features
+        run: cargo build
 
       - name: Create directories
         run: mkdir -p mutations gifs images layers prompts
