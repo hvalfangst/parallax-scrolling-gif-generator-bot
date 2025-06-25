@@ -39,4 +39,4 @@ jobs:
           fi
 
       - name: Run tests
-        run: cargo test --no-default-features -- --test-threads=1
+        run: cargo test --no-default-features -- --test-threads=4
