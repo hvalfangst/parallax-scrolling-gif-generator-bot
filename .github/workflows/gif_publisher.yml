@@ -30,6 +30,9 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Build project to populate cache
+        run: cargo build --release
+
       - name: Cache Cargo dependencies
         uses: actions/cache@v3
         with:
