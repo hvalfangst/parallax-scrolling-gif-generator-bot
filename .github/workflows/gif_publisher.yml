@@ -41,6 +41,7 @@ jobs:
 
       - name: Cache Rust build artifacts
         uses: actions/cache@v3
+        id: cache_rust_build_artifacts
         with:
           path: target
           key: ${{ runner.os }}-target-${{ hashFiles('**/Cargo.lock') }}
