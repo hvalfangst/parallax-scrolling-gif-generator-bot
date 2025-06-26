@@ -66,7 +66,7 @@ pub fn generate_and_save_image(
     match image_generator.generate_image(prompt.as_str()) {
         Ok(image_data) => {
             let elapsed_time_image_generation = start_time_image_generation.elapsed();
-            println!(\n"*************  Image generated with size {} bytes in {} seconds ************* ", image_data.len(), elapsed_time_image_generation.as_secs_f64());
+            println!("\n*************  Image generated with size {} bytes in {} seconds ************* ", image_data.len(), elapsed_time_image_generation.as_secs_f64());
 
             let start_time_save_files = Instant::now();
             utils::file_manager::FileManager::save_prompt(prompt.as_str(), current_date)?;
