@@ -7,6 +7,7 @@ use chrono::NaiveDate;
 use minifb::{Window, WindowOptions};
 use std::fs;
 use std::io::stdin;
+use std::time::Instant;
 
 mod graphics; mod state; mod utils; mod generators;
 
@@ -15,8 +16,7 @@ fn main() {
     let headless = parse_headless_mode();
 
     if headless {
-        println!("Running in headless mode, tailored for the GitHub runner.");
-
+        println!("\nRunning in headless mode, tailored for the GitHub runner.");
         let (prompt_generator, image_generator) = initialize_generators();
         let current_date = chrono::Utc::now().date_naive();
 
@@ -26,12 +26,18 @@ fn main() {
             return;
         }
 
+        let start_time_extract_palette = Instant::now();
         let (color_map, color_to_index_map) = extract_palette_or_exit(INPUT_IMAGE_PATH);
+        let elapsed_time_extract_palette = start_time_extract_palette.elapsed();
+        println!("\n*************  Palette extraction took: {:.2?} ************* ", elapsed_time_extract_palette);
 
+        let start_time_create_layers = Instant::now();
         if let Err(e) = create_parallax_layers_for_date(INPUT_IMAGE_PATH, current_date) {
             eprintln!("Error during parallax layer creation: {}", e);
             return;
         }
+        let elapsed_time_create_layers = start_time_create_layers.elapsed();
+        println!("\n*************  Parallax layer creation took: {:.2?} ************* ", elapsed_time_create_layers);
 
         let binding = prompt_result.unwrap();
         let mut window_buffer = vec![0; WINDOW_WIDTH * WINDOW_HEIGHT];

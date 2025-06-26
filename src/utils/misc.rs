@@ -55,15 +55,24 @@ pub fn generate_and_save_image(
     image_generator: &generators::image_generator::ImageGenerator,
     current_date: NaiveDate,
 ) -> Result<String, Box<dyn Error>> {
-    let prompt = prompt_generator.generate_prompt()?;
-    println!("Generated prompt: {}", prompt);
 
+
+    let start_time_text_prompt = Instant::now();
+    let prompt = prompt_generator.generate_prompt()?;
+    let elapsed_time_text_prompt = start_time_text_prompt.elapsed();
+    println!("\n*************  Generated prompt: {} in {} seconds ************* ", prompt, elapsed_time_text_prompt.as_secs_f64());
+
+    let start_time_image_generation = Instant::now();
     match image_generator.generate_image(prompt.as_str()) {
         Ok(image_data) => {
-            println!("Image generated successfully, size: {} bytes", image_data.len());
+            let elapsed_time_image_generation = start_time_image_generation.elapsed();
+            println!(\n"*************  Image generated with size {} bytes in {} seconds ************* ", image_data.len(), elapsed_time_image_generation.as_secs_f64());
 
+            let start_time_save_files = Instant::now();
             utils::file_manager::FileManager::save_prompt(prompt.as_str(), current_date)?;
             utils::file_manager::FileManager::save_image(&image_data, current_date)?;
+            let elapsed_time_save_files = start_time_save_files.elapsed();
+            println!("\n*************  Files saved in {} seconds ************* ", elapsed_time_save_files.as_secs_f64());
         }
         Err(e) => {
             eprintln!("Error generating image: {}", e);
