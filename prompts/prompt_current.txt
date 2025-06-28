@@ -1,1 +1,3 @@
-Background for 2d side-scrolling game, which have 4 separate horizontal layers. Layer 1: The far background features a distant mountain range with gentle slopes and peaks, rendered in muted blues and grays (0x001f41, 0x2f5a78, 0x44789c).
+Background for 2d side-scrolling game, which have 4 separate horizontal layers.  
+Layer 1 (256px): Distant sky with subtle gradient and faint clouds, using light blues and soft whites to create depth.  
+Layer 2 (512px): Mid-distant mountains and hills with gentle curves, in darker blues and muted greens, adding some variation with small trees.
