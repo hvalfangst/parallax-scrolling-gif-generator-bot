@@ -5,17 +5,17 @@ use crate::state::constants::graphics::MAX_GIF_FRAMES;
 use crate::state::structs::State;
 use crate::utils::misc::{finalize_gif_encoding, is_window_open, should_process_frame, simulate_camera_movement};
 use std::fs::File;
-use std::process::exit;
 use std::time::Instant;
+use timing_macro::timed;
 
-pub fn start_gif_recording_loop(mut state: State) {
+#[timed]
+pub fn record_gif(mut state: State) {
     let (width, height) = (state.window_width as u16, state.window_height as u16);
     let path = format!("gifs/gif_{}.gif", state.target_date);
     let mut image = File::create(&path).unwrap();
     let mut encoder = initialize_gif_encoder(&mut image, width, height);
     let mut frame_count = 0;
     let mut last_update = Instant::now();
-    let start_time_gif_recording = Instant::now();
 
     loop {
         if !state.headless && !is_window_open(&state) {
@@ -32,9 +32,7 @@ pub fn start_gif_recording_loop(mut state: State) {
                 last_update = Instant::now();
             } else {
                 finalize_gif_encoding(state, frame_count, path.as_str());
-                let elapsed_time_gif_recording = start_time_gif_recording.elapsed();
-                println!("\n************* GIF recording completed in: {:.2?} ************* ", elapsed_time_gif_recording);
-                exit(0);
+                break;
             }
         }
     }

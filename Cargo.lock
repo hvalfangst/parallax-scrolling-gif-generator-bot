@@ -637,6 +637,7 @@ dependencies = [
  "pyo3",
  "rand",
  "regex",
+ "timing_macro",
 ]
 
 [[package]]
@@ -1007,6 +1008,14 @@ dependencies = [
  "flate2",
  "jpeg-decoder",
  "weezl",
+]
+
+[[package]]
+name = "timing_macro"
+version = "0.1.0"
+dependencies = [
+ "quote",
+ "syn",
 ]
 
 [[package]]

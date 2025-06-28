@@ -1,13 +1,14 @@
 use crate::state::constants::file_paths::INPUT_IMAGE_PATH;
 use crate::state::constants::graphics::{WINDOW_HEIGHT, WINDOW_WIDTH};
-use crate::state::event_loop::start_gif_recording_loop;
+use crate::state::event_loop::record_gif;
 use crate::state::structs::State;
 use crate::utils::misc::{create_parallax_layers_for_date, extract_palette_or_exit, generate_and_save_image, initialize_generators, parse_headless_mode, prepare_python_interpreter};
 use chrono::NaiveDate;
 use minifb::{Window, WindowOptions};
 use std::fs;
 use std::io::stdin;
-use std::time::Instant;
+use std::process::exit;
+
 
 mod graphics; mod state; mod utils; mod generators;
 
@@ -26,18 +27,13 @@ fn main() {
             return;
         }
 
-        let start_time_extract_palette = Instant::now();
         let (color_map, color_to_index_map) = extract_palette_or_exit(INPUT_IMAGE_PATH);
-        let elapsed_time_extract_palette = start_time_extract_palette.elapsed();
-        println!("\n*************  Palette extraction took: {:.2?} ************* ", elapsed_time_extract_palette);
 
-        let start_time_create_layers = Instant::now();
         if let Err(e) = create_parallax_layers_for_date(INPUT_IMAGE_PATH, current_date) {
             eprintln!("Error during parallax layer creation: {}", e);
             return;
         }
-        let elapsed_time_create_layers = start_time_create_layers.elapsed();
-        println!("\n*************  Parallax layer creation took: {:.2?} ************* ", elapsed_time_create_layers);
+
 
         let binding = prompt_result.unwrap();
         let mut window_buffer = vec![0; WINDOW_WIDTH * WINDOW_HEIGHT];
@@ -52,7 +48,7 @@ fn main() {
             Some(color_to_index_map),
         );
 
-        start_gif_recording_loop(state);
+        record_gif(state);
     }
 
     else {
@@ -89,7 +85,7 @@ fn main() {
         stdin().read_line(&mut input).expect("Failed to read input");
         let selected_index: usize = input.trim().parse::<usize>().expect("Invalid input") - 1;
 
-        if selected_index >= images.len() {
+        if selected_index >= images.len()-1 {
             eprintln!("Invalid selection.");
             return;
         }
@@ -126,7 +122,7 @@ fn main() {
             Some(color_to_index_map),
         );
 
-        start_gif_recording_loop(state);
+        record_gif(state);
     }
 
 

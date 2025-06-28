@@ -11,6 +11,7 @@ use crate::graphics::parallax::create_parallax_layers;
 use crate::state::constants::file_paths::CURRENT_GIF_PATH;
 use crate::state::constants::graphics::CAMERA_X_INCREMENT;
 use crate::state::structs::State;
+use timing_macro::timed;
 
 /// Utility functions for initializing and managing Python interpreters, generators,
 /// and handling image generation and processing.
@@ -50,6 +51,7 @@ pub fn initialize_generators() -> (generators::prompt_generator::PromptGenerator
 ///
 /// # Returns
 /// `Ok((String))` with the prompt if the image is successfully generated and saved, otherwise an error.
+#[timed]
 pub fn generate_and_save_image(
     prompt_generator: &generators::prompt_generator::PromptGenerator,
     image_generator: &generators::image_generator::ImageGenerator,
@@ -91,6 +93,7 @@ pub fn generate_and_save_image(
 ///
 /// # Returns
 /// `Ok(())` if the layers are successfully created, otherwise an error.
+#[timed]
 pub fn create_parallax_layers_for_date(input_image_path: &str, current_date: NaiveDate) -> Result<(), Box<dyn Error>> {
     println!("Creating parallax layers for date: {}", current_date);
 
@@ -179,6 +182,7 @@ pub fn finalize_gif_encoding(state: State, frame_count: usize, path: &str) {
 /// A tuple containing:
 /// - A vector of palette colors.
 /// - A hash map mapping pixel values to palette indices.
+#[timed]
 pub fn extract_palette_or_exit(image_path: &str) -> (Vec<u8>, HashMap<u32, u8>) {
     match extract_palette(image_path) {
         Ok(result) => result,

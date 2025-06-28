@@ -1,6 +1,7 @@
 use crate::utils::text_processor::TextProcessor;
 use anyhow::Result;
 use pyo3::prelude::*;
+use timing_macro::timed;
 
 /// A struct representing a prompt generator that interacts with the OpenAI API.
 pub struct PromptGenerator {
@@ -20,6 +21,7 @@ impl PromptGenerator {
     ///
     /// # Returns
     /// A `Result` containing the generated prompt as a `String` if successful, or an error otherwise.
+    #[timed]
     pub fn generate_prompt(&self) -> Result<String> {
         let system_prompt = get_system_prompt();
         let text_prompt = generate_text_prompt();

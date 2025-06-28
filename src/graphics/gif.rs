@@ -3,6 +3,7 @@ use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::process::exit;
+use timing_macro::timed;
 use crate::state::constants::graphics::{WINDOW_HEIGHT, WINDOW_WIDTH};
 
 /// Initializes a GIF encoder with the specified image file, width, and height.
@@ -39,6 +40,7 @@ pub fn initialize_gif_encoder(image: &mut File, width: u16, height: u16) -> Enco
 /// * `frame_count` - A mutable reference to the current frame count.
 /// * `color_map` - The palette of colors used in the GIF.
 /// * `map` - A mutable hash map for mapping pixel values to palette indices.
+#[timed]
 pub fn process_frame(
     window_buffer: &mut Vec<u32>,
     encoder: &mut Encoder<&mut File>,
@@ -80,6 +82,7 @@ pub fn process_frame(
 ///
 /// # Returns
 /// A vector of indices corresponding to the palette colors.
+#[timed]
 fn map_pixels_to_indices(buffer: &[u32], color_to_index_map: &mut HashMap<u32, u8>, palette: &[(u8, u8, u8)]) -> Vec<u8> {
     let mut logged_pixels = HashSet::new();
     let next_index = color_to_index_map.len() as u8;
@@ -155,6 +158,7 @@ fn color_distance(color1: (u8, u8, u8), color2: (u8, u8, u8)) -> f64 {
 /// * `color_map` - The palette of colors used in the GIF.
 /// * `buffer` - The pixel buffer containing palette indices.
 /// * `frame_count` - The current frame count.
+#[timed]
 fn write_frame_to_gif(
     encoder: &mut Encoder<&mut File>,
     width: u16,
